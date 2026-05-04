@@ -134,7 +134,7 @@ CREATE PROCEDURE sp_register_donor(
     OUT p_donor_id INT,
     OUT p_message VARCHAR(255)
 )
-BEGIN
+sp_register_donor: BEGIN
     DECLARE v_age INT;
     DECLARE v_exists INT;
 
@@ -237,7 +237,7 @@ CREATE PROCEDURE sp_issue_blood(
     OUT p_issued_count INT,
     OUT p_message VARCHAR(255)
 )
-BEGIN
+sp_issue_blood: BEGIN
     DECLARE v_blood_group VARCHAR(3);
     DECLARE v_units_needed INT;
     DECLARE v_unit_id INT;
