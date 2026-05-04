@@ -7,22 +7,6 @@ USE blood_bank_db;
 DELIMITER $$
 
 -- ============================================================
--- TRIGGER 1: Auto-update donor eligibility after donation
--- Donors must wait 90 days between donations
--- ============================================================
-CREATE TRIGGER trg_after_donation_insert
-AFTER INSERT ON donation
-FOR EACH ROW
-BEGIN
-    UPDATE donor
-    SET last_donation_date = NEW.donation_date,
-        is_eligible = 0
-    WHERE donor_id = NEW.donor_id;
-
-    INSERT INTO audit_log (action_type, table_name, record_id, description)
-    VALUES ('DONATION_RECORDED', 'donation', NEW.donation_id, CONCAT('Donor ', NEW.donor_id, ' marked ineligible post-donation'));
-END$$
-
 -- ============================================================
 -- TRIGGER 2: Auto-expire blood units past 42 days (RBC shelf life)
 -- Runs on SELECT via EVENT, but we also check on status update
@@ -229,11 +213,18 @@ BEGIN
 
             SET p_unit_id = LAST_INSERT_ID();
 
-            INSERT INTO donation (donor_id, unit_id, camp_id, donation_date, staff_id, hemoglobin, bp_systolic, bp_diastolic, weight)
-            VALUES (p_donor_id, p_unit_id, p_camp_id, CURDATE(), p_staff_id, p_hemoglobin, p_bp_sys, p_bp_dia, p_weight);
+              INSERT INTO donation (donor_id, unit_id, camp_id, donation_date, staff_id, hemoglobin, bp_systolic, bp_diastolic, weight)
+              VALUES (p_donor_id, p_unit_id, p_camp_id, CURDATE(), p_staff_id, p_hemoglobin, p_bp_sys, p_bp_dia, p_weight);
 
-        COMMIT;
-        SET p_message = 'Donation recorded successfully';
+              INSERT INTO audit_log (action_type, table_name, record_id, description)
+              VALUES ('DONATION_RECORDED', 'donation', LAST_INSERT_ID(), CONCAT('Donor ', p_donor_id, ' marked ineligible post-donation'));
+
+              UPDATE donor 
+              SET last_donation_date = CURDATE(), is_eligible = 0 
+              WHERE donor_id = p_donor_id;
+
+          COMMIT;
+          SET p_message = 'Donation recorded successfully';
     END IF;
 END$$
 
