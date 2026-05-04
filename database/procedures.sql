@@ -359,9 +359,9 @@ BEGIN
     DECLARE v_count INT DEFAULT 0;
     DECLARE v_done INT DEFAULT 0;
 
-    DECLARE cur_report CURSOR FOR
-        SELECT d.full_name, don.blood_group_ref_blood_group, don.donation_date
-        FROM donation don
+      DECLARE cur_report CURSOR FOR 
+          SELECT d.full_name, bu.blood_group, don.donation_date
+          FROM donation don
         JOIN donor d ON d.donor_id = don.donor_id
         JOIN blood_unit bu ON bu.unit_id = don.unit_id
         WHERE don.donation_date >= DATE_SUB(CURDATE(), INTERVAL p_days DAY)
@@ -370,16 +370,17 @@ BEGIN
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET v_done = 1;
 
     -- Just return the set directly (cursor here is for demo; the real query is the SELECT below)
-    SELECT
-        d.full_name AS donor_name,
-        don.donation_date,
-        bu.blood_group,
-        bu.quantity_ml,
-        bu.status AS unit_status,
-        bu.expiry_date,
-        COALESCE(c.camp_name, 'Walk-in') AS camp_name,
-        s.full_name AS staff_name
-    FROM donation don
+      SELECT 
+          d.full_name AS donor_name, 
+          don.donation_date, 
+          bu.blood_group, 
+          bu.quantity_ml, 
+          bu.status AS unit_status, 
+          bu.expiry_date, 
+          COALESCE(c.camp_name, 'Walk-in') AS camp_name, 
+          s.full_name AS staff_name,
+          don.hemoglobin
+      FROM donation don
     JOIN donor d ON d.donor_id = don.donor_id
     JOIN blood_unit bu ON bu.unit_id = don.unit_id
     LEFT JOIN blood_camp c ON c.camp_id = don.camp_id
