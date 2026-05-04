@@ -1,7 +1,7 @@
 # Blood Bank Management System
 **Thapar Institute of Engineering & Technology, Patiala**  
 UCS310 – Database Management Systems | 2026–27  
-Group: Aksh Kaushik (1024030660), Chinmay (1024030664), Rahil Yadav (1024030786)  
+Group: Chinmay (1024030664), Aksh Kaushik (1024030660), Rahil Yadav (1024030786)  
 Lab Instructor: Dr. Ananya Pandey
 
 ---
