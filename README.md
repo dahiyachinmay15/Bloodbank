@@ -8,7 +8,7 @@ Lab Instructor: Dr. Ananya Pandey
 
 ## What This Project Covers
 
-- **3NF Normalized** relational schema (8 tables: donor, blood_unit, donation, hospital, blood_request, blood_issue, blood_camp, audit_log)
+- **3NF Normalized**  relational schema (8 tables: donor, blood_unit, donation, hospital, blood_request, blood_issue, blood_camp, audit_log)
 - **Stored Procedures**: sp_register_donor, sp_record_donation, sp_issue_blood, sp_mark_expired_units, sp_inventory_summary, sp_donation_report
 - **Functions**: fn_available_units, fn_is_donor_eligible, fn_donor_donation_count
 - **Triggers**: auto-mark donor ineligible post-donation, expiry check before issue, audit trail after issue, request status logging
